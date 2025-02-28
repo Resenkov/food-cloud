@@ -1,12 +1,9 @@
-package resenkov.work.foodcloud.controller;
+package resenkov.work.foodcloud.web;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import resenkov.work.foodcloud.Ingredient;
 import resenkov.work.foodcloud.Ingredient.Type;
 import resenkov.work.foodcloud.Taco;
@@ -57,6 +54,13 @@ public class DesignTacoController {
     }
 
 
+    @PostMapping
+    public  String processTaco (Taco taco, @ModelAttribute TacoOrder tacoOrder) {
+        tacoOrder.addTaco(taco);
+        log.info("Taco: " + taco);
+
+        return "redirect:/orders/current";
+    }
     @GetMapping
     public String showDesignForm() {
         return "design";
