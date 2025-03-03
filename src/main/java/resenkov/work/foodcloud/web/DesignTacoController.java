@@ -1,6 +1,7 @@
 package resenkov.work.foodcloud.web;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +9,9 @@ import resenkov.work.foodcloud.Ingredient;
 import resenkov.work.foodcloud.Ingredient.Type;
 import resenkov.work.foodcloud.Taco;
 import resenkov.work.foodcloud.TacoOrder;
+import resenkov.work.foodcloud.data.IngredientRepository;
 
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,26 +21,20 @@ import java.util.stream.Collectors;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
+    private IngredientRepository ingredientRepository;
+
+    @Autowired
+    public DesignTacoController(IngredientRepository ingredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+    }
+
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("МУЛП", "Мучная лепешка", Type.WRAP),
-                new Ingredient("КУКУ", "Кукурузная лепешка", Type.WRAP),
-                new Ingredient("ГВФШ", "Говяжий фарш", Type.PROTEIN),
-                new Ingredient("СВФШ", "Свиной фарш", Type.PROTEIN),
-                new Ingredient("ПИДР", "Помидоры", Type.VEGGIES),
-                new Ingredient("СЛАТ", "Салат", Type.VEGGIES),
-                new Ingredient("ЧЕДР", "Чеддр", Type.CHEESE),
-                new Ingredient("РОСС", "Российский", Type.CHEESE),
-                new Ingredient("СЛСА", "Сальса", Type.SAUCE),
-                new Ingredient("СМТН", "Сметана", Type.SAUCE)
-        );
-
-
+        Iterable<Ingredient> ingredients = ingredientRepository.findAll();
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
             model.addAttribute(type.toString().toLowerCase(),
-                    filterByType(ingredients, type));
+                    filterByType((List<Ingredient>) ingredients, type));
         }
     }
 

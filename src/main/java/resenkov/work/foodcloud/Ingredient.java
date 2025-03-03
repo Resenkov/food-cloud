@@ -1,15 +1,24 @@
 package resenkov.work.foodcloud;
 
 
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
+@Entity
+@Getter
+@Setter
+@Cacheable
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
+
 public class Ingredient {
-    private final String id;
-    private final String name;
-    private final Type type;
 
-    public  enum Type {
+    @Id
+    private String id;
+    private String name;
+    private Type type;
+
+    public enum Type {
         WRAP, PROTEIN, VEGGIES, CHEESE, SAUCE
     }
 }
